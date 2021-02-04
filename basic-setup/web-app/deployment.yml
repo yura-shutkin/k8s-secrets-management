@@ -1,0 +1,65 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  labels:
+    app: web-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+      annotations:
+        vault.security.banzaicloud.io/vault-addr: http://vault:8200/
+        vault.security.banzaicloud.io/vault-path: kubernetes
+        vault.security.banzaicloud.io/vault-role: dev-ro
+        vault.security.banzaicloud.io/transit-path: transit
+        vault.security.banzaicloud.io/transit-key-id: dev
+    spec:
+      containers:
+        - name: web-app
+          image: localhost:5000/web-app:1.0.0-ubuntu
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PLAIN_ENV
+              value: stored-in-git
+            - name: FROM_VAULT_TOKEN
+              value: vault:project/data/prod/token
+            - name: FROM_VAULT_ENCRYPTED
+              value: vault:v1:VC+g5oygaoTzQUMZHGjJMQ0seR7ScX+CrKiyBPsdcrcW
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-creds
+                  key: db_pass
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-creds
+                  key: db_name
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-creds
+                  key: db_user
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-creds
+                  key: db_host
+          volumeMounts:
+            - name: db-creds
+              mountPath: "/etc/db-creds"
+              readOnly: true
+      volumes:
+        - name: db-creds
+          secret:
+            secretName: db-creds
+            defaultMode: 0404

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web app envs</title>
+    <style>
+        th {
+            text-align: center;
+            font-weight: bold;
+            background: lightgray;
+            border: 1px solid black;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        td {
+            text-align: left;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+    </style>
+</head>
+<body>
+<table>
+    <tr>
+        <th>Source</th>
+        <th>Name</th>
+        <th>Value</th>
+    </tr>
+    {{ range $source, $vals := . }}
+        {{ range $env, $val := $vals }}
+            <tr>
+                <td>{{ $source }}</td>
+                <td>{{ $env }}</td>
+                <td>{{ $val }}</td>
+            </tr>
+        {{ end }}
+    {{ end }}
+</table>
+</body>
+</html>
