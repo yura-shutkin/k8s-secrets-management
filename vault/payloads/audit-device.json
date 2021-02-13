@@ -1,0 +1,7 @@
+{
+  "type": "file",
+  "options": {
+    "file_path": "stdout"
+  },
+  "description": "Send audit logs into stdout"
+}

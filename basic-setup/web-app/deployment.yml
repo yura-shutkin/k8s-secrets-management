@@ -15,11 +15,12 @@ spec:
       labels:
         app: web-app
       annotations:
-        vault.security.banzaicloud.io/vault-addr: http://vault:8200/
+        vault.security.banzaicloud.io/vault-addr: http://vault.vault/
         vault.security.banzaicloud.io/vault-path: kubernetes
         vault.security.banzaicloud.io/vault-role: dev-ro
-        vault.security.banzaicloud.io/transit-path: transit
+        vault.security.banzaicloud.io/transit-path: project/transit
         vault.security.banzaicloud.io/transit-key-id: dev
+        vault.security.banzaicloud.io/vault-skip-verify: "true"
     spec:
       containers:
         - name: web-app
@@ -31,7 +32,10 @@ spec:
             - name: PLAIN_ENV
               value: stored-in-git
             - name: FROM_VAULT_TOKEN
-              value: vault:project/data/prod/token
+              value: vault:project/kv/data/dev/token#value#1
+            - name: FROM_VAULT_TOKEN_SECOND
+              value: vault:project/kv/data/dev/token#value#2
+            # TODO: this value should be actual for every installation
             - name: FROM_VAULT_ENCRYPTED
               value: vault:v1:VC+g5oygaoTzQUMZHGjJMQ0seR7ScX+CrKiyBPsdcrcW
             - name: DB_PASS

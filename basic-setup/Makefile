@@ -7,16 +7,19 @@ create-namespace: ## Create namespace basic-setup
 create-secret: ## Create secret in k8s
 	@kubectl --namespace basic-setup apply -f secrets/db-creds.yml
 
-.PHONY: apply-web-app
-apply-web-app: ## Deploy basic service
+.PHONY: deploy-web-app
+deploy-web-app: ## Deploy basic service
 	@kubectl --namespace basic-setup apply -f web-app
 	@minikube --namespace basic-setup service --url web-app
 
-.PHONY: apply-vault
-apply-vault: ## Deploy vault
-	@kubectl --namespace basic-setup apply -f vault
-	@minikube --namespace basic-setup service --url vault
+.PHONY: rollout-web-app
+rollout-web-app: ## Rollout restart web-app
+	@kubectl --namespace basic-setup rollout restart deployments/web-app
 
-.PHONY: apply-bank-vaults
-apply-bank-vaults: ## Deploy bank-vaults (Vault secrets webhook)
+.PHONY: deploy-bank-vaults
+deploy-bank-vaults: ## Deploy bank-vaults (Vault secrets webhook)
 	@cd banzaicloud/bank-vaults/ && make deploy-webhook
+
+.PHONY: setup-roles
+setup-roles: ## Setup roles
+	@kubectl --namespace basic-setup apply -f vault-auth
