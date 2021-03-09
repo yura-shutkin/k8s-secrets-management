@@ -5,7 +5,7 @@ This repo is set of examples and prototypes for secrets management
 ## Repo status
 
 ---
-    Active development
+    Development in progress
 ---
 
 ## Requirements
@@ -16,21 +16,32 @@ This repo is set of examples and prototypes for secrets management
 - [vault](https://vaultproject.io)
 - [docker](https://docs.docker.com/get-docker/)
 
+## Documentation
+
+* [errors and how to fix them](docs/errors.md)
+* [TODO](TODO.md)
+
 ## How to start
 
 - Run `make start-minikube`
-- If you wish to have access to K8S dashboard run `make start-dashboard`
-- Next you need to start registry
-  - `cd registry`
-  - `make start`
-- Then build application
-  - `cd ../web-app`
-  - `make build-n-push arch=ubuntu`
-  - `make build-n-push arch=scratch`
-- And deployments
-  - `cd ../basic-setup`
+- To start k8s dashboard exec `make start-dashboard`
+- Deploy vault
+  - `cd vault`
+  - `make create namespace`
+  - `make deploy-vault`
+  - `make setup-vault`
+  - `cd ../`
+- Deploy Vault Secrets Webhook
+  - `cd bank-vaults`
   - `make create-namespace`
-  - `make apply-vault`
+  - `make deploy-webhook`
+  - `make setup-rbac`
+  - `cd ../`
+- Deploy application
+  - `cd basic-setup`
+  - `make create-namespace`
   - `make create-secret`
-  - `make apply-bank-vaults`
-  - `make apply-web-app`
+  - `make update-vault-auth`
+  - `make deploy-web-app`
+  - `make deploy-second-app`
+  - `cd ../`
