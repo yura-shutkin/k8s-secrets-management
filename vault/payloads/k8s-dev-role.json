@@ -1,0 +1,6 @@
+{
+  "bound_service_account_names": ["default"],
+  "bound_service_account_namespaces": ["basic-setup"],
+  "token_policies": ["dev_ro", "dev_key_decrypt"],
+  "token_max_ttl": "1m"
+}

@@ -1,0 +1,3 @@
+{
+  "policy": "path \"project/transit/decrypt/stage\" {\n  capabilities = [\"update\"]\n}"
+}

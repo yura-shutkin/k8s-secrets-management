@@ -1,0 +1,6 @@
+{
+  "bound_service_account_names": ["default"],
+  "bound_service_account_namespaces": ["basic-setup"],
+  "token_policies": ["stage_ro", "stage_key_decrypt"],
+  "token_max_ttl": "1m"
+}
