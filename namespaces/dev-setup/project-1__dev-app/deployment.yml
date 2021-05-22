@@ -1,0 +1,74 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-1-dev-app
+  labels:
+    app: project-1-dev-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-1-dev-app
+  template:
+    metadata:
+      labels:
+        app: project-1-dev-app
+      annotations:
+        vault.security.banzaicloud.io/vault-addr: "http://vault.vault/"
+        vault.security.banzaicloud.io/vault-path: "kubernetes"
+        vault.security.banzaicloud.io/vault-role: "project-1__dev-ro"
+        vault.security.banzaicloud.io/transit-path: "project-1/transit"
+        vault.security.banzaicloud.io/transit-key-id: "dev"
+        vault.security.banzaicloud.io/vault-skip-verify: "true"
+        # Fail if at least one secret is unavailable (be cause of encrypted secret that can not be decrypted with wrong key)
+        vault.security.banzaicloud.io/vault-ignore-missing-secrets: "true"
+    spec:
+      containers:
+        - name: project-1-dev-app
+          image: yuriiashutkin/web-app:1.0.0-ubuntu
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            # TODO: https://banzaicloud.com/docs/bank-vaults/mutating-webhook/configuration/#request-a-vault-token
+            - name: VAULT_TOKEN
+              value: vault:login
+            - name: PLAIN_ENV
+              value: stored-in-git
+            - name: FROM_VAULT_TOKEN
+              value: "vault:project-1/kv/data/dev/token#value#1"
+            - name: FROM_VAULT_TOKEN_SECOND
+              value: "vault:project-1/kv/data/dev/token#value#2"
+            # TODO: this value should be actual for every installation
+            - name: FROM_VAULT_ENCRYPTED
+              value: "vault:v1:Sj+2US8faYJ7SGkpKLKSm0Mbm/thI9t4PAA2dCNwDs2TKfVNfyafNSCKLvxJPg=="
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-creds
+                  key: db_pass
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-creds
+                  key: db_name
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-creds
+                  key: db_user
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-creds
+                  key: db_host
+          volumeMounts:
+            - name: db-creds
+              mountPath: "/etc/db-creds"
+              readOnly: true
+      volumes:
+        - name: db-creds
+          secret:
+            secretName: db-creds
+            defaultMode: 0404

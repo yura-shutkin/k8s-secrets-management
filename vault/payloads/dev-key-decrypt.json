@@ -1,3 +1,0 @@
-{
-  "policy": "path \"project/transit/decrypt/dev\" {\n  capabilities = [\"update\"]\n}"
-}
