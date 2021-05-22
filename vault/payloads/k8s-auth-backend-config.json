@@ -1,4 +1,0 @@
-{
-  "kubernetes_host": "https://192.168.49.2:8443",
-  "kubernetes_ca_cert": ""
-}

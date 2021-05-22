@@ -1,8 +1,0 @@
-{
-  "description": "K8S auth backend",
-  "type": "kubernetes",
-  "config": {
-    "default_lease_ttl": "1m",
-    "max_lease_ttl": "10m"
-  }
-}

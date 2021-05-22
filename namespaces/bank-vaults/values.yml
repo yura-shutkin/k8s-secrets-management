@@ -1,0 +1,4 @@
+---
+rbac:
+  authDelegatorRole:
+    enabled: true

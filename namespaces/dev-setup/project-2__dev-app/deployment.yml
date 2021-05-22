@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-2-dev-app
+  labels:
+    app: project-2-dev-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-2-dev-app
+  template:
+    metadata:
+      labels:
+        app: project-2-dev-app
+      annotations:
+        vault.security.banzaicloud.io/vault-addr: "http://vault.vault/"
+        vault.security.banzaicloud.io/vault-path: "kubernetes"
+        vault.security.banzaicloud.io/vault-role: "project-2__dev-ro"
+        vault.security.banzaicloud.io/vault-skip-verify: "true"
+        # Fail if at least one secret is unavailable (be cause of encrypted secret that can not be decrypted with wrong key)
+        vault.security.banzaicloud.io/vault-ignore-missing-secrets: "true"
+    spec:
+      serviceAccountName: project-2-dev
+      automountServiceAccountToken: true
+      containers:
+        - name: web-app
+          image: yuriiashutkin/web-app:1.0.0-ubuntu
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: DB_NAME
+              value: "vault:project-2/kv/data/dev/db_creds#db_name#1"
+            - name: DB_USER
+              value: "vault:project-2/kv/data/dev/db_creds#db_user#1"
+            - name: DB_PASS
+              value: "vault:project-2/kv/data/dev/db_creds#db_pass#1"

@@ -160,3 +160,30 @@ This message can be frustrating, but this message means you have issue with decr
   "error": "1 error occurred:\n\t* cipher: message authentication failed\n\n"
 }
 ```
+
+## Namespace not found
+
+Check if namespace exist
+```
+Error from server (NotFound): namespaces "basic-setup" not found
+HTTP/1.1 500 Internal Server Error
+Cache-Control: no-store
+Content-Type: application/json
+Date: Thu, 20 May 2021 05:15:51 GMT
+Content-Length: 52
+
+{"errors":["could not load backend configuration"]}
+```
+
+### Could not load backend configuration
+
+Check if kubernetes auth backend setup properly
+```
+HTTP/1.1 500 Internal Server Error
+Cache-Control: no-store
+Content-Type: application/json
+Date: Thu, 20 May 2021 05:16:07 GMT
+Content-Length: 52
+
+{"errors":["could not load backend configuration"]}
+```

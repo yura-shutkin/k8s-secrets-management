@@ -1,0 +1,7 @@
+{
+  "bound_service_account_names": ["default"],
+  "bound_service_account_namespaces": ["prod-setup"],
+  "token_policies": ["project-1__prod-ro"],
+  "token_ttl": "5m",
+  "token_max_ttl": "10m"
+}
