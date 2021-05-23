@@ -1,0 +1,7 @@
+{
+  "bound_service_account_names": ["project-1-pgsql"],
+  "bound_service_account_namespaces": ["dev-setup"],
+  "token_policies": ["project-1__dev_db-creds-ro"],
+  "token_ttl": "5m",
+  "token_max_ttl": "10m"
+}

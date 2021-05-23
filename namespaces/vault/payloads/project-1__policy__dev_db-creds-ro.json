@@ -1,0 +1,3 @@
+{
+  "policy": "path \"project-1/kv/data/dev/db_creds\" {\n  capabilities = [\"read\"]\n}"
+}

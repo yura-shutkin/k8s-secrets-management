@@ -4,6 +4,15 @@ NAMESPACE="prod-setup"
 namespace-create: ## Create namespace prod-setup
 	@kubectl --namespace $(NAMESPACE) apply -f namespace.yml
 
+.PHONY: namespace-delete
+namespace-delete: ## Delete namespace $(NAMESPACE)
+	@kubectl --namespace $(NAMESPACE) delete -f namespace.yml
+
+.PHONY: namespace-recreate
+namespace-recreate: ## Recreate namespace $(NAMESPACE)
+	@$(MAKE) namespace-delete
+	@$(MAKE) namespace-create
+
 .PHONY: project-1-prod-app-deploy
 project-1-prod-app-deploy: ## Deploy basic project-1/prod-app
 	@kubectl --namespace $(NAMESPACE) apply -f project-1__prod-app
@@ -35,4 +44,4 @@ project-1-prod-app-port-forward: ## Forward port from vault to localhost
 
 .PHONY: project-1-prod-app-check-login
 project-1-prod-app-check-login: ## Check if we can log into vault
-	@curl -s -D /dev/stderr -X POST -d "{\"role\":\"project-1__prod-ro\",\"jwt\":\"$(shell make default-sa-token-get)\"}" http://localhost:8200/v1/auth/kubernetes/login | jq '.auth'
+	@curl -s -D /dev/stderr -X POST -d "{\"role\":\"project-1__prod\",\"jwt\":\"$(shell make default-sa-token-get)\"}" http://localhost:8200/v1/auth/kubernetes/login | jq '.auth'

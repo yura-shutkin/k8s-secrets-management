@@ -48,4 +48,4 @@ This repo is set of examples and prototypes for secrets management
 - Run `make proxy`
 - Open [dashboard](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login)
 ---
-- [Deploy bank vault Vault Secrets Webhook](namespaces/bank-vaults/README.md)
+- Next step: [Deploy bank vault Vault Secrets Webhook](namespaces/bank-vaults/)

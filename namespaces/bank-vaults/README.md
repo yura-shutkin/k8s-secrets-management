@@ -10,4 +10,4 @@
 - Run `make namespace-create`
 - Run `make webhook-install`
 ---
-- Now go and setup [Hashicorp Vault](../vault/README.md)
+- Next step: setup [Hashicorp Vault](../vault/)

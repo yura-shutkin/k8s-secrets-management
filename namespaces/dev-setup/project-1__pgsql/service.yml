@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: project-2-dev-app
+  name: project-1-pgsql
 spec:
   selector:
-    app: project-2-dev-app
+    app: project-1-pgsql
   type: NodePort
   ports:
     - protocol: TCP

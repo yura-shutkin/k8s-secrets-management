@@ -17,7 +17,7 @@ spec:
       annotations:
         vault.security.banzaicloud.io/vault-addr: "http://vault.vault/"
         vault.security.banzaicloud.io/vault-path: "kubernetes"
-        vault.security.banzaicloud.io/vault-role: "project-1__stage-ro"
+        vault.security.banzaicloud.io/vault-role: "project-1__stage"
         vault.security.banzaicloud.io/transit-path: "project-1/transit"
         vault.security.banzaicloud.io/transit-key-id: "stage"
         vault.security.banzaicloud.io/vault-skip-verify: "true"
