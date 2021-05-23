@@ -17,7 +17,7 @@ spec:
       annotations:
         vault.security.banzaicloud.io/vault-addr: "http://vault.vault/"
         vault.security.banzaicloud.io/vault-path: "kubernetes"
-        vault.security.banzaicloud.io/vault-role: "project-1__prod-ro"
+        vault.security.banzaicloud.io/vault-role: "project-1__prod"
         vault.security.banzaicloud.io/vault-skip-verify: "true"
         # Fail if at least one secret is unavailable (be cause of encrypted secret that can not be decrypted with wrong key)
         vault.security.banzaicloud.io/vault-ignore-missing-secrets: "false"

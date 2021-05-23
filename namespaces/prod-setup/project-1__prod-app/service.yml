@@ -2,10 +2,10 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: web-app
+  name: project-1-prod-app
 spec:
   selector:
-    app: web-app
+    app: project-1-prod-app
   type: NodePort
   ports:
     - protocol: TCP

@@ -34,7 +34,7 @@ admin-sa-secret-name-get: ## Show default sa secret name
 .PHONY: admin-sa-token-get
 admin-sa-token-get: ## Get token of default-vault-secrets-webhook SA
 	@kubectl --namespace $(NAMESPACE) get secret $(shell make admin-sa-secret-name-get) -o json | jq -r '.data.token' | base64 --decode
-	@echo
+	@echo -e '\n\n'
 	@echo "http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login"
 
 .PHONY: proxy

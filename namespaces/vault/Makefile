@@ -4,6 +4,15 @@ NAMESPACE="vault"
 namespace-create: ## Create namespace basic-setup
 	@kubectl --namespace $(NAMESPACE) apply -f namespace.yml
 
+.PHONY: namespace-delete
+namespace-delete: ## Delete namespace $(NAMESPACE)
+	@kubectl --namespace $(NAMESPACE) delete -f namespace.yml
+
+.PHONY: namespace-recreate
+namespace-recreate: ## Recreate namespace $(NAMESPACE)
+	@$(MAKE) namespace-delete
+	@$(MAKE) namespace-create
+
 .PHONY: vault-deploy
 vault-deploy: ## Deploy vault
 	@kubectl --namespace $(NAMESPACE) apply -f deployment.yml -f service.yml
@@ -27,12 +36,14 @@ vault-setup: ## Create necessary resources in vault
 	# Configure k8s auth backend
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d "{\"kubernetes_host\": \"https://10.96.0.1\", \"kubernetes_ca_cert\":\"$(CA_CRT)\", \"disable_local_ca_jwt\": \"true\", \"token_reviewer_jwt\":\"$(JWT)\"}" "$(VAULT_URL)/v1/auth/kubernetes/config"
 	# Create or update k8s auth roles
-	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__dev.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__dev-ro"
-	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__stage.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__stage-ro"
-	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__prod.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__prod-ro"
-	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-2__k8s-role__dev.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-2__dev-ro"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__dev.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__dev"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__stage.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__stage"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__prod.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__prod"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__pgsql.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__pgsql"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-2__k8s-role__dev.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-2__dev"
 	# Create or update policies
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev-ro.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev-ro"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev_db-creds-ro.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev_db-creds-ro"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev-key-decrypt.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev-key-decrypt"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__stage-ro.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__stage-ro"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__stage-key-decrypt.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__stage-key-decrypt"
@@ -48,6 +59,8 @@ vault-setup: ## Create necessary resources in vault
 	@curl -X DELETE -H "X-Vault-Token: $(VAULT_TOKEN)" "$(VAULT_URL)/v1/project-1/kv/metadata/stage/token"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/token_v2.json "$(VAULT_URL)/v1/project-1/kv/data/stage/token"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/token_v1.json "$(VAULT_URL)/v1/project-1/kv/data/stage/token"
+	@curl -X DELETE -H "X-Vault-Token: $(VAULT_TOKEN)" "$(VAULT_URL)/v1/project-1/kv/metadata/dev/db_creds"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__db_creds_v1.json "$(VAULT_URL)/v1/project-1/kv/data/dev/db_creds"
 	@ # project-1/prod-app
 	@curl -X DELETE -H "X-Vault-Token: $(VAULT_TOKEN)" "$(VAULT_URL)/v1/project-1/kv/metadata/prod/db_creds"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__db_creds_v1.json "$(VAULT_URL)/v1/project-1/kv/data/prod/db_creds"

@@ -1,0 +1,39 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-1-pgsql
+  labels:
+    app: project-1-pgsql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-1-pgsql
+  template:
+    metadata:
+      labels:
+        app: project-1-pgsql
+      annotations:
+        vault.security.banzaicloud.io/vault-addr: "http://vault.vault/"
+        vault.security.banzaicloud.io/vault-path: "kubernetes"
+        vault.security.banzaicloud.io/vault-role: "project-1__pgsql"
+        vault.security.banzaicloud.io/vault-skip-verify: "true"
+        # Fail if at least one secret is unavailable (be cause of encrypted secret that can not be decrypted with wrong key)
+        vault.security.banzaicloud.io/vault-ignore-missing-secrets: "false"
+    spec:
+      serviceAccountName: project-1-pgsql
+      automountServiceAccountToken: true
+      containers:
+        - name: project-1-pgsql
+          image: postgres:12-alpine
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          env:
+            - name: POSTGRES_PASSWORD
+              value: "vault:project-1/kv/data/dev/db_creds#db_pass#1"
+            - name: POSTGRES_USER
+              value: "vault:project-1/kv/data/dev/db_creds#db_user#1"
+            - name: POSTGRES_DB
+              value: "vault:project-1/kv/data/dev/db_creds#db_name#1"
