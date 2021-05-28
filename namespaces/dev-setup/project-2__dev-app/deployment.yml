@@ -26,14 +26,14 @@ spec:
       automountServiceAccountToken: true
       containers:
         - name: web-app
-          image: yuriiashutkin/web-app:1.0.0-ubuntu
+          image: yuriiashutkin/web-app:1.1.0-ubuntu
           ports:
             - containerPort: 8080
               protocol: TCP
           env:
-            - name: DB_NAME
+            - name: FROM_VAULT_DB_NAME
               value: "vault:project-2/kv/data/dev/db_creds#db_name#1"
-            - name: DB_USER
+            - name: FROM_VAULT_DB_USER
               value: "vault:project-2/kv/data/dev/db_creds#db_user#1"
-            - name: DB_PASS
+            - name: FROM_VAULT_DB_PASS
               value: "vault:project-2/kv/data/dev/db_creds#db_pass#1"

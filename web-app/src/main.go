@@ -36,11 +36,20 @@ func ShowVars(w http.ResponseWriter, r *http.Request) {
 		"envs": make(map[string]string),
 	}
 
-	files := []string {
-		"/etc/db-creds/db_pass",
-		"/etc/db-creds/db_name",
-		"/etc/db-creds/db_host",
-		"/etc/db-creds/db_user",
+	dirs := []string {
+	  "/etc/db-creds",
+	}
+
+	var files []string
+
+	for idx := range dirs {
+		err := filepath.Walk(dirs[idx], func(path string, info os.FileInfo, err error) error {
+			files = append(files, path)
+			return nil
+		})
+		if err != nil {
+			fmt.Printf("An error occured: %s\n", err)
+		}
 	}
 
 	for _, envs := range os.Environ() {

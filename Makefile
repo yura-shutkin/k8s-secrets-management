@@ -49,6 +49,7 @@ proxy: ## Proxy k8s api on localhost
 prepare: ## Download images that will be used in a future
 	@kubectl --namespace $(PREP_NS) apply -f prepare/namespace.yml
 	@kubectl --namespace $(PREP_NS) apply -f prepare/jobs.yml
+	@$(MAKE) -C namespaces/bank-vaults webhook-update
 
 .PHONY: prepare-delete
 prepare-delete: ## Download images that will be used in a future
