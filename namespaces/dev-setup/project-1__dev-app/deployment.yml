@@ -26,7 +26,7 @@ spec:
     spec:
       containers:
         - name: project-1-dev-app
-          image: yuriiashutkin/web-app:1.0.0-ubuntu
+          image: yuriiashutkin/web-app:1.1.0-ubuntu
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -42,7 +42,7 @@ spec:
               value: "vault:project-1/kv/data/dev/token#value#2"
             # TODO: this value should be actual for every installation
             - name: FROM_VAULT_ENCRYPTED
-              value: "vault:v1:Sj+2US8faYJ7SGkpKLKSm0Mbm/thI9t4PAA2dCNwDs2TKfVNfyafNSCKLvxJPg=="
+              value: "vault:v1:fHZMQXji9AsPnLXLhImlexj1rP7anD/1wb9qtag2v8RE/VQWDJg0/oLwxoY="
             - name: DB_PASS
               valueFrom:
                 secretKeyRef:

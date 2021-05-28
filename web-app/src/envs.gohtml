@@ -3,6 +3,19 @@
 <head>
     <title>Web app envs</title>
     <style>
+        #from_vault {
+          background-color: orange;
+          font-weight: bold;
+        }
+
+        #from_file {
+            background-color: yellow;
+        }
+
+        #hidden {
+          display: none;
+        }
+
         th {
             text-align: center;
             font-weight: bold;
@@ -23,9 +36,27 @@
             border-collapse: collapse;
         }
     </style>
+    <script>
+        function paint() {
+            let vars_table = document.getElementById("vars_table");
+            let rows_total = vars_table.rows.length;
+            for (let idx = 0; idx < rows_total; idx++) {
+                let row = vars_table.rows[idx];
+                if (row.cells[0].textContent === "file") {
+                    row.id = "from_file"
+                    continue
+                }
+                if ((row.cells[1].textContent.startsWith("FROM_VAULT_")) || (row.cells[1].textContent === "VAULT_TOKEN")) {
+                    row.id = "from_vault";
+                } else if ((row.cells[1].textContent.startsWith("KUBERNETES_")) || (row.cells[1].textContent.startsWith("PROJECT_"))) {
+                    row.id = "hidden"
+                }
+            }
+        }
+    </script>
 </head>
-<body>
-<table>
+<body onload="paint()">
+<table id="vars_table">
     <tr>
         <th>Source</th>
         <th>Name</th>
