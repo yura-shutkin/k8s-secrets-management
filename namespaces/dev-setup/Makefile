@@ -80,7 +80,7 @@ project-1-stage-app-deploy: ## Deploy basic stage-app
 
 .PHONY: project-1-stage-app-rollout
 project-1-stage-app-rollout: ## Rollout restart stage-app
-	@kubectl --namespace $(NAMESPACE) rollout restart deployments/project-1stage-app
+	@kubectl --namespace $(NAMESPACE) rollout restart deployments/project-1-stage-app
 
 .PHONY: project-1-stage-app-delete
 project-1-stage-app-delete: ## Delete stage-app
@@ -121,9 +121,9 @@ project-1-pgsql-pod-get: ## Get id of vault pod
 	@kubectl --namespace $(NAMESPACE) get pods --selector app=project-1-pgsql -o json | jq -r '.items[0].metadata.name'
 
 .PHONY: project-1-pgsql-port-forward
-PROJECT_1_DEV_APP_POD=$(shell make project-1-pgsql-pod-get)
+PROJECT_1_PGSQL_POD=$(shell make project-1-pgsql-pod-get)
 project-1-pgsql-port-forward: ## Forward port from vault to localhost
-	@kubectl --namespace $(NAMESPACE) port-forward pods/$(PROJECT_1_DEV_APP_POD) 15432:5432
+	@kubectl --namespace $(NAMESPACE) port-forward pods/$(PROJECT_1_PGSQL_POD) 15432:5432
 
 .PHONY: project-1-pgsql-sa-secret-name-get
 project-1-pgsql-sa-secret-name-get: ## Show project-1-pgsql sa secret name

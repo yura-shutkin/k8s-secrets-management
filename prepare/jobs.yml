@@ -1,0 +1,119 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: metrics-scraper
+spec:
+  template:
+    spec:
+      containers:
+        - name: metrics-scraper
+          image: kubernetesui/metrics-scraper:v1.0.6
+          imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 1
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: dashboard
+spec:
+  template:
+    spec:
+      containers:
+        - name: dashboard
+          image: kubernetesui/dashboard:v2.2.0
+          imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 1
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-secrets-webhook
+spec:
+  template:
+    spec:
+      containers:
+        - name: vault-secrets-webhook
+          image: ghcr.io/banzaicloud/vault-secrets-webhook:1.13.0
+          imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 1
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault
+spec:
+  template:
+    spec:
+      containers:
+        - name: vault
+          image: vault:1.7.1
+          imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 1
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgres
+spec:
+  template:
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:12-alpine
+          imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 1
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: web-app-ubuntu
+spec:
+  template:
+    spec:
+      containers:
+        - name: web-app-ubuntu
+          image: yuriiashutkin/web-app:1.0.0-ubuntu
+          imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 1
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: web-app-scratch
+spec:
+  template:
+    spec:
+      containers:
+        - name: web-app-scratch
+          image: yuriiashutkin/web-app:1.0.0-scratch
+          imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 1
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-env
+spec:
+  template:
+    spec:
+      containers:
+        - name: vault-env
+          image: ghcr.io/banzaicloud/vault-env:1.13.0
+          imagePullPolicy: Always
+      restartPolicy: Never
+  backoffLimit: 1

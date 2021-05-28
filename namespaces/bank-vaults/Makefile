@@ -4,12 +4,25 @@ NAMESPACE=bank-vaults
 namespace-create: ## Create namespace basic-setup
 	@kubectl --namespace $(NAMESPACE) apply -f namespace.yml
 
+.PHONY: namespace-delete
+namespace-delete: ## Delete namespace $(NAMESPACE)
+	@kubectl --namespace $(NAMESPACE) delete -f namespace.yml
+
+.PHONY: namespace-recreate
+namespace-recreate: ## Recreate namespace $(NAMESPACE)
+	@$(MAKE) namespace-delete
+	@$(MAKE) namespace-create
+
+.PHONY: webhook-update
+webhook-update: ## Get helm chart
+	@helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
+	@helm repo update
+	@helm pull banzaicloud-stable/vault-secrets-webhook --version=1.13.0
+
 .PHONY: webhook-install
 namespace=bank-vaults
 webhook-install: ## Install webhook
-	@helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
-	@helm repo update
-	@helm upgrade --namespace $(namespace) --install -f values.yml default banzaicloud-stable/vault-secrets-webhook --version=1.13.0
+	@helm upgrade --namespace $(namespace) --install -f values.yml default vault-secrets-webhook-1.13.0.tgz
 
 .PHONY: webhook-uninstall
 namespace=bank-vaults

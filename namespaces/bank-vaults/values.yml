@@ -2,3 +2,9 @@
 rbac:
   authDelegatorRole:
     enabled: true
+
+debug: true
+
+vaultEnv:
+  repository: ghcr.io/banzaicloud/vault-env
+  tag: 1.13.0
