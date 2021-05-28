@@ -1,9 +1,12 @@
 NAMESPACE=kubernetes-dashboard
+PREP_NS=prepare
 
 .PHONY: minikube-start
 NODES=1
+CPUS=2
+MEMORY=2G
 minikube-start: ## Start minikube
-	@minikube start --nodes=$(NODES)
+	@minikube start --nodes=$(NODES) --cpus=$(CPUS) --memory=$(MEMORY)
 
 .PHONY: dashboard-deploy
 dashboard-deploy: ## Start dashboard
@@ -34,9 +37,28 @@ admin-sa-secret-name-get: ## Show default sa secret name
 .PHONY: admin-sa-token-get
 admin-sa-token-get: ## Get token of default-vault-secrets-webhook SA
 	@kubectl --namespace $(NAMESPACE) get secret $(shell make admin-sa-secret-name-get) -o json | jq -r '.data.token' | base64 --decode
-	@echo -e '\n\n'
+	@echo
+	@echo
 	@echo "http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login"
 
 .PHONY: proxy
 proxy: ## Proxy k8s api on localhost
 	@kubectl proxy --port=8001
+
+.PHONY: prepare
+prepare: ## Download images that will be used in a future
+	@kubectl --namespace $(PREP_NS) apply -f prepare/namespace.yml
+	@kubectl --namespace $(PREP_NS) apply -f prepare/jobs.yml
+
+.PHONY: prepare-delete
+prepare-delete: ## Download images that will be used in a future
+	@kubectl --namespace $(PREP_NS) delete -f prepare/namespace.yml
+
+.PHONY: events-get
+VERBOSE=3
+events-get: ## Stream events for every namespece
+	@kubectl get events --watch --all-namespaces --v=$(VERBOSE)
+
+.PHONY: pods-show
+pods-show: ## Show status of pods
+	@watch -n 1 kubectl --all-namespaces=true get pods
