@@ -9,5 +9,5 @@ spec:
   type: NodePort
   ports:
     - protocol: TCP
-      port: 8080
-      targetPort: 8080
+      port: 5432
+      targetPort: 5432

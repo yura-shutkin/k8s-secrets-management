@@ -37,3 +37,27 @@ spec:
               value: "vault:project-1/kv/data/dev/db_creds#db_user#1"
             - name: POSTGRES_DB
               value: "vault:project-1/kv/data/dev/db_creds#db_name#1"
+          volumeMounts:
+            - name: project-db-init
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: project-db-init
+          configMap:
+            name: project-db-init-script
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-db-init-script
+data:
+  project_db-init.sql: |
+    CREATE TABLE clients
+    (
+        uid         integer CONSTRAINT no_null NOT NULL,
+        name        TEXT COLLATE "C" NOT NULL,
+        surname     TEXT COLLATE "C"
+    );
+    INSERT INTO clients VALUES (1, 'John', 'Smith');
+    INSERT INTO clients VALUES (2, 'Lilian', 'Worksmith');
+    INSERT INTO clients VALUES (3, 'Michael', 'Rupert');

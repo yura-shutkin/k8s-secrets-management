@@ -39,10 +39,43 @@ This repo is set of examples and prototypes for secrets management
 - [TODO](TODO.md)
 - [Mutating webhook configuration examples](https://banzaicloud.com/docs/bank-vaults/mutating-webhook/configuration/)
 - [Mutating webhook annotations](https://banzaicloud.com/docs/bank-vaults/mutating-webhook/annotations/)
+- <details>
+  <summary>Demo project schemes</summary>
+  
+  - <details>
+    <summary>dev-setup</summary>
+  
+    ![dev-setup-namespace](docs/schemes/dev-setup.png)
+    </details>
+
+  - <details>
+    <summary>prod-setup</summary>
+  
+    ![prod-setup-namespace](docs/schemes/prod-setup.png)
+    </details>
+  </details>
 
 ## How to start
 
 - Run `make minikube-start`
+- <details>
+  <summary>(Optional) If you wish to download docker images before demo</summary>
+  
+  - Run `make prepare`
+  </details>
+
+- <details>
+  <summary>(Optional) If you wish to see every container in test cluster</summary>
+  
+  - Run `make pods-watch`
+  </details>
+
+- <details>
+  <summary>(Optional) If you wish to see cluster events</summary>
+  
+  - Run `make events-watch`
+  </details>
+
 - Run `make dashboard-deploy`
 - Run `make admin-sa-token-get`
 - Run `make proxy`

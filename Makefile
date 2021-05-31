@@ -55,11 +55,11 @@ prepare: ## Download images that will be used in a future
 prepare-delete: ## Download images that will be used in a future
 	@kubectl --namespace $(PREP_NS) delete -f prepare/namespace.yml
 
-.PHONY: events-get
+.PHONY: events-watch
 VERBOSE=3
-events-get: ## Stream events for every namespece
+events-watch: ## Stream events for every namespece
 	@kubectl get events --watch --all-namespaces --v=$(VERBOSE)
 
-.PHONY: pods-show
-pods-show: ## Show status of pods
+.PHONY: pods-watch
+pods-watch: ## Show status of pods
 	@watch -n 1 kubectl --all-namespaces=true get pods
