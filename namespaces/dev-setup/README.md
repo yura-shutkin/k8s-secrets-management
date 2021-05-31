@@ -1,6 +1,5 @@
 # Dev setup namespace
 
-
 ## How to set
 - Run `cd ../dev-setup`
 - Run `make namespace-create`
@@ -13,6 +12,11 @@
 - Put encrypted string into [project-1__dev-app/deployment.yml]()
 - Encrypt string for dev env [project-1/transit/stage](http://localhost:8200/ui/vault/secrets/project-1%2Ftransit/actions/stage?action=encrypt)
 - Put encrypted string into [project-1__dev-stage/deployment.yml]()
+- Run `make project-1-pgsql-deploy`
+- Run `make project-1-pgsql-vault-setup`
+- Run `make project-1-pgsql-port-forward`
+  <!-- Docker can't connect on mac, may be on Windows too -->
+- On linux run `docker run --rm -ti -e 'PGPASSWORD=S3cr3t' --network=host postgres:12-alpine psql -h 0.0.0.0 -U project -p 15432 -d project_db -c 'SELECT NOW();'`
 - Run `make project-1-dev-app-deploy`
 - Run `make project-1-dev-app-port-forward`
 - Visit http://localhost:11080
@@ -21,11 +25,7 @@
 - Visit http://localhost:11081
 - Run `make project-2-dev-app-deploy`
 - Run `make project-2-dev-app-port-forward`
-- Visit http://localhost:11180
-- Run `make project-1-pgsql-deploy`
-- Run `make project-1-pgsql-port-forward`
-<!-- Not working on mac, may be on Windows too -->
-- On linux run `docker run --rm -ti -e 'PGPASSWORD=S3cr3t' --network=host postgres:12-alpine psql -h 0.0.0.0 -U project -p 15432 -d project_db -c 'SELECT NOW();'` 
+- Visit http://localhost:11180 
 
 ---
 

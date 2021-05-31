@@ -1,7 +1,7 @@
 {
   "bound_service_account_names": ["default"],
   "bound_service_account_namespaces": ["dev-setup"],
-  "token_policies": ["project-1__dev-ro", "project-1__dev-key-decrypt"],
+  "token_policies": ["project-1__dev-ro", "project-1__dev-key-decrypt", "project-1__dev_db-creds_ro-gen"],
   "token_ttl": "5m",
   "token_max_ttl": "10m"
 }

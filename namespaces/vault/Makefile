@@ -19,7 +19,7 @@ vault-deploy: ## Deploy vault
 
 .PHONY: vault-setup
 VAULT_TOKEN=12345
-VAULT_URL=localhost:8200
+VAULT_URL=http://localhost:8200
 JWT=$(shell make sa-token-get)
 CA_CRT=$(shell make sa-cert-get)
 vault-setup: ## Create necessary resources in vault
@@ -43,7 +43,8 @@ vault-setup: ## Create necessary resources in vault
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-2__k8s-role__dev.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-2__dev"
 	# Create or update policies
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev-ro.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev-ro"
-	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev_db-creds-ro.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev_db-creds-ro"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev_db-creds_root.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev_db-creds_root"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev_db-creds-ro-gen.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev_db-creds_ro-gen"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev-key-decrypt.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev-key-decrypt"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__stage-ro.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__stage-ro"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__stage-key-decrypt.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__stage-key-decrypt"
@@ -71,6 +72,9 @@ vault-setup: ## Create necessary resources in vault
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__key__dev.json "$(VAULT_URL)/v1/project-1/transit/keys/dev"
 	# Create project-1/stage key
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__key__stage.json "$(VAULT_URL)/v1/project-1/transit/keys/stage"
+	# Enable database SE for project-1
+	@ # Can be enabled on second attempt. So ignoring errors
+	-@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__database.json "$(VAULT_URL)/v1/sys/mounts/project-1/database"
 	# Done
 
 .PHONY: vault-pod-get

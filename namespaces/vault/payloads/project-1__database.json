@@ -1,0 +1,9 @@
+{
+  "type": "database",
+  "description":  "Project-1 database SE",
+  "config": {
+    "default_lease_ttl": "300s",
+    "max_lease_ttl": "600s",
+    "force_no_cache": false
+  }
+}

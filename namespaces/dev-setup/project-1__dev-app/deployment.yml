@@ -36,33 +36,19 @@ spec:
               value: vault:login
             - name: PLAIN_ENV
               value: stored-in-git
-            - name: FROM_VAULT_TOKEN
+            - name: FROM_VAULT_TOKEN_V1
               value: "vault:project-1/kv/data/dev/token#value#1"
-            - name: FROM_VAULT_TOKEN_SECOND
+            - name: FROM_VAULT_TOKEN_V2
               value: "vault:project-1/kv/data/dev/token#value#2"
             # TODO: this value should be actual for every installation
             - name: FROM_VAULT_ENCRYPTED
               value: "vault:v1:fHZMQXji9AsPnLXLhImlexj1rP7anD/1wb9qtag2v8RE/VQWDJg0/oLwxoY="
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: db-creds
-                  key: db_pass
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-creds
-                  key: db_name
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: db-creds
-                  key: db_user
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: db-creds
-                  key: db_host
+            - name: FROM_VAULT_DB_USER
+              value: "vault:project-1/database/creds/project_ro#username"
+            - name: FROM_VAULT_DB_PASS
+              value: "vault:project-1/database/creds/project_ro#password"
+            - name: FROM_VAULT_DB_URL
+              value: "postgres://${vault:project-1/database/creds/project_ro#username}:${vault:project-1/database/creds/project_ro#password}@project-1-pgsql.dev-setup:5432/project_db?search_path=public&sslmode=disable"
           volumeMounts:
             - name: db-creds
               mountPath: "/etc/db-creds"

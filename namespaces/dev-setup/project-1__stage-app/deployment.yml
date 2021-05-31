@@ -33,9 +33,9 @@ spec:
           env:
             - name: PLAIN_ENV
               value: stored-in-git
-            - name: FROM_VAULT_TOKEN
+            - name: FROM_VAULT_TOKEN_V1
               value: "vault:project-1/kv/data/stage/token#value#1"
-            - name: FROM_VAULT_TOKEN_SECOND
+            - name: FROM_VAULT_TOKEN_V2
               value: "vault:project-1/kv/data/stage/token#value#2"
             # TODO: this value should be actual for every installation
             - name: FROM_VAULT_ENCRYPTED

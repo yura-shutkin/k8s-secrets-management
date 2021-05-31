@@ -9,5 +9,7 @@
 - Run `cd namespaces/bank-vaults`
 - Run `make namespace-create`
 - Run `make webhook-install`
+
 ---
+
 - Next step: setup [Hashicorp Vault](../vault/)

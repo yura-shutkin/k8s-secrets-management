@@ -1,4 +1,6 @@
 NAMESPACE=dev-setup
+VAULT_TOKEN=12345
+VAULT_URL=http://localhost:8200
 
 .PHONY: namespace-create
 namespace-create: ## Create namespace $(NAMESPACE)
@@ -107,6 +109,12 @@ project-1-stage-app-check-login: ## Check if we can log into vault
 .PHONY: project-1-pgsql-deploy
 project-1-pgsql-deploy: ## Deploy basic pgsql
 	@kubectl --namespace $(NAMESPACE) apply -f project-1__pgsql
+
+.PHONY: project-1-pgsql-vault-setup
+project-1-pgsql-vault-setup: ## Setup Vault database SE for project-1-pgsql
+	# project-1 database configuration
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @project-1__pgsql/payloads/project_db__connection.json "$(VAULT_URL)/v1/project-1/database/config/project_db"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @project-1__pgsql/payloads/project_db__ro-role.json "$(VAULT_URL)/v1/project-1/database/roles/project_ro"
 
 .PHONY: project-1-pgsql-rollout
 project-1-pgsql-rollout: ## Rollout restart pgsql
