@@ -15,6 +15,7 @@ spec:
       labels:
         app: project-1-stage-app
       annotations:
+        vault.security.banzaicloud.io/enable-json-log: "true"
         vault.security.banzaicloud.io/vault-addr: "http://vault.vault/"
         vault.security.banzaicloud.io/vault-path: "kubernetes"
         vault.security.banzaicloud.io/vault-role: "project-1__stage"
@@ -23,6 +24,7 @@ spec:
         vault.security.banzaicloud.io/vault-skip-verify: "true"
         # Fail if at least one secret is unavailable (be cause of encrypted secret that can not be decrypted with wrong key)
         vault.security.banzaicloud.io/vault-ignore-missing-secrets: "true"
+        vault.security.banzaicloud.io/vault-env-daemon: "true"
     spec:
       containers:
         - name: stage-app
@@ -40,26 +42,8 @@ spec:
             # TODO: this value should be actual for every installation
             - name: FROM_VAULT_ENCRYPTED
               value: "vault:v1:psajosIWWS9fRU1prKO3fQ6qgAmEiVh57rUWMB7el1+MqBMl5mpacAW61j6wyw=="
-            - name: DB_PASS
-              valueFrom:
-                secretKeyRef:
-                  name: db-creds
-                  key: db_pass
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: db-creds
-                  key: db_name
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: db-creds
-                  key: db_user
-            - name: DB_HOST
-              valueFrom:
-                secretKeyRef:
-                  name: db-creds
-                  key: db_host
+            - name: FROM_VAULT_DB_URL
+              value: "postgres://${vault:project-1/database/creds/stage_project_ro#username}:${vault:project-1/database/creds/stage_project_ro#password}@project-1-pgsql.dev-setup:5432/project_db?search_path=public&sslmode=disable"
           volumeMounts:
             - name: db-creds
               mountPath: "/etc/db-creds"
