@@ -115,6 +115,7 @@ project-1-pgsql-vault-setup: ## Setup Vault database SE for project-1-pgsql
 	# project-1 database configuration
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @project-1__pgsql/payloads/project_db__connection.json "$(VAULT_URL)/v1/project-1/database/config/project_db"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @project-1__pgsql/payloads/project_db__ro-role.json "$(VAULT_URL)/v1/project-1/database/roles/project_ro"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @project-1__pgsql/payloads/stage_project_db__ro-role.json "$(VAULT_URL)/v1/project-1/database/roles/stage_project_ro"
 
 .PHONY: project-1-pgsql-rollout
 project-1-pgsql-rollout: ## Rollout restart pgsql

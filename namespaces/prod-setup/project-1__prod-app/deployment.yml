@@ -15,6 +15,7 @@ spec:
       labels:
         app: project-1-prod-app
       annotations:
+        vault.security.banzaicloud.io/enable-json-log: "true"
         vault.security.banzaicloud.io/vault-addr: "http://vault.vault/"
         vault.security.banzaicloud.io/vault-path: "kubernetes"
         vault.security.banzaicloud.io/vault-role: "project-1__prod"
