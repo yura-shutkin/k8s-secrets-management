@@ -36,9 +36,11 @@ func ShowVars(w http.ResponseWriter, r *http.Request) {
 		"envs": make(map[string]string),
 	}
 
-	dirs := []string {
-	  "/etc/db-creds",
-	}
+  var env_dirs string
+  env_dirs = os.Getenv("SECRETS_DIRS")
+	var dirs []string
+	dirs = strings.Split(env_dirs, ",")
+	fmt.Println(dirs)
 
 	var files []string
 

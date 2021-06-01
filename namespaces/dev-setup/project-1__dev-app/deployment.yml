@@ -27,7 +27,7 @@ spec:
     spec:
       containers:
         - name: project-1-dev-app
-          image: yuriiashutkin/web-app:1.1.0-ubuntu
+          image: yuriiashutkin/web-app:1.2.1-ubuntu
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -45,11 +45,13 @@ spec:
             - name: FROM_VAULT_ENCRYPTED
               value: "vault:v1:fHZMQXji9AsPnLXLhImlexj1rP7anD/1wb9qtag2v8RE/VQWDJg0/oLwxoY="
             - name: FROM_VAULT_DB_USER
-              value: "vault:project-1/database/creds/project_ro#username"
+              value: "vault:project-1/database/creds/dev-setup__dev__project_ro#username"
             - name: FROM_VAULT_DB_PASS
-              value: "vault:project-1/database/creds/project_ro#password"
+              value: "vault:project-1/database/creds/dev-setup__dev__project_ro#password"
             - name: FROM_VAULT_DB_URL
-              value: "postgres://${vault:project-1/database/creds/project_ro#username}:${vault:project-1/database/creds/project_ro#password}@project-1-pgsql.dev-setup:5432/project_db?search_path=public&sslmode=disable"
+              value: "postgres://${vault:project-1/database/creds/dev-setup__dev__project_ro#username}:${vault:project-1/database/creds/dev-setup__dev__project_ro#password}@project-1-pgsql.dev-setup:5432/project_db?search_path=public&sslmode=disable"
+            - name: SECRETS_DIRS
+              value: "/etc/db-creds"
           volumeMounts:
             - name: db-creds
               mountPath: "/etc/db-creds"

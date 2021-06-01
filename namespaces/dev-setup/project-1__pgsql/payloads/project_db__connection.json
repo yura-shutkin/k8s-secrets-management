@@ -1,7 +1,7 @@
 {
   "plugin_name": "postgresql-database-plugin",
   "connection_url": "postgresql://{{username}}:{{password}}@project-1-pgsql.dev-setup:5432/project_db?search_path=public&sslmode=disable",
-  "allowed_roles": ["project_ro", "stage_project_ro"],
+  "allowed_roles": ["dev-setup__dev__project_ro", "dev-setup__stage__project_ro"],
   "username": "project",
   "password": "s3cr3T"
 }
