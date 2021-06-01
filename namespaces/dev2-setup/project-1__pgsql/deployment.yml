@@ -1,0 +1,70 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-1-pgsql
+  labels:
+    app: project-1-pgsql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-1-pgsql
+  template:
+    metadata:
+      labels:
+        app: project-1-pgsql
+      annotations:
+        vault.security.banzaicloud.io/mutate: "skip"
+        vault.hashicorp.com/agent-inject: "false"
+        # vault.hashicorp.com/role: "project-1__pgsql"
+        # vault.hashicorp.com/agent-inject-secret-database-root-vars: "project-1/kv/data/dev/db_creds"
+        # vault.hashicorp.com/agent-inject-template-database-root-vars: |
+        #   {{- with secret "project-1/kv/data/dev/db_creds" -}}
+        #   export POSTGRES_PASSWORD={{ .Data.data.db_pass }}
+        #   export POSTGRES_USER={{ .Data.data.db_user }}
+        #   export POSTGRES_DB={{ .Data.data.db_name }}
+        #   {{- end -}}
+    spec:
+      serviceAccountName: project-1-pgsql
+      automountServiceAccountToken: true
+      containers:
+        - name: project-1-pgsql
+          image: postgres:12-alpine
+          ports:
+            - containerPort: 5432
+              protocol: TCP
+          # https://www.vaultproject.io/docs/platform/k8s/injector/examples#environment-variable-example not working
+          # args:
+          #   ['sh', '-c', 'source /vault/secrets/database-root-vars && docker-entrypoint.sh']
+          env:
+            - name: POSTGRES_DB
+              value: project_db
+            - name: POSTGRES_USER
+              value: project
+            - name: POSTGRES_PASSWORD
+              value: s3cr3T
+          volumeMounts:
+            - name: project-db-init
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: project-db-init
+          configMap:
+            name: project-db-init-script
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: project-db-init-script
+data:
+  project_db-init.sql: |
+    CREATE TABLE clients
+    (
+        uid         integer CONSTRAINT no_null NOT NULL,
+        name        TEXT COLLATE "C" NOT NULL,
+        surname     TEXT COLLATE "C"
+    );
+    INSERT INTO clients VALUES (1, 'John', 'Smith');
+    INSERT INTO clients VALUES (2, 'Lilian', 'Worksmith');
+    INSERT INTO clients VALUES (3, 'Michael', 'Rupert');

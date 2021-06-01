@@ -44,8 +44,10 @@ vault-setup: ## Create necessary resources in vault
 	# Create or update policies
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev-ro.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev-ro"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev_db-creds_root.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev_db-creds_root"
-	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev_db-creds-ro-gen.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev_db-creds_ro-gen"
-	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev_db-creds-stage-ro-gen.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev_db-stage-creds_ro-gen"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev-setup__dev_db__dev__creds-ro-gen.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev-setup__dev_db__dev__creds_ro-gen"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev2-setup__dev_db__dev__creds-ro-gen.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev2-setup__dev_db__dev__creds_ro-gen"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev-setup__dev_db__stage__creds-ro-gen.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev-setup__dev_db__stage__creds_ro-gen"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev2-setup__dev_db__stage__creds-ro-gen.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev2-setup__dev_db__stage__creds_ro-gen"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__dev-key-decrypt.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__dev-key-decrypt"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__stage-ro.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__stage-ro"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__policy__stage-key-decrypt.json "$(VAULT_URL)/v1/sys/policies/acl/project-1__stage-key-decrypt"
@@ -89,7 +91,7 @@ vault-port-forward: ## Forward port from vault to localhost
 
 .PHONY: jwt-in-audit-logs-show
 jwt-in-audit-logs-show: ## Show JWT in audit logs
-	@curl -sX POST -H "X-Vault-Token: 12345" -d '{"audit_non_hmac_request_keys": ["role", "jwt"]}' http://127.0.0.1:8200/v1/sys/auth/kubernetes/tune
+	@curl -sX POST -H "X-Vault-Token: 12345" -d '{"audit_non_hmac_request_keys": ["role", "jwt", "error"]}' http://127.0.0.1:8200/v1/sys/auth/kubernetes/tune
 
 .PHONY: jwt-in-audit-logs-hide
 jwt-in-audit-logs-hide: ## Hide JWT in audit logs
@@ -106,3 +108,17 @@ sa-token-get: ## Get token of default-vault-secrets-webhook SA
 .PHONY: sa-cert-get
 sa-cert-get: ## Get CA cert of default-vault-secrets-webhook SA
 	@kubectl --namespace bank-vaults get secret $(shell make sa-secret-name-get) -o json | jq -r '.data."ca.crt"' | base64 --decode | sed -z 's/\n/\\n/g'
+
+.PHONY: vault-chart-update
+vault-chart-update: ## Get helm chart
+	@helm repo add hashicorp https://helm.releases.hashicorp.com
+	@helm repo update
+	@helm pull hashicorp/vault --version=0.12.0
+
+.PHONY: vault-injector-install
+vault-injector-install: ## Install vault injector
+	@helm upgrade --namespace $(NAMESPACE) --install -f injector.yml default vault-0.12.0.tgz
+
+.PHONY: vault-injector-uninstall
+vault-injector-uninstall: ## Uninstall vault injector
+	@helm uninstall --namespace $(NAMESPACE) default

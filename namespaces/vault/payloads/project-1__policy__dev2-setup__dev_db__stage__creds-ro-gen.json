@@ -1,0 +1,3 @@
+{
+  "policy": "path \"project-1/database/creds/dev2-setup__stage__project_ro\" {\n  capabilities = [\"read\"]\n}"
+}

@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-1-stage-app
+  labels:
+    app: project-1-stage-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-1-stage-app
+  template:
+    metadata:
+      labels:
+        app: project-1-stage-app
+      annotations:
+        vault.security.banzaicloud.io/mutate: "skip"
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "project-1__stage"
+        vault.hashicorp.com/agent-inject-secret-database-config.txt: "project-1/database/creds/dev2-setup__stage__project_ro"
+        vault.hashicorp.com/agent-inject-template-database-config.txt: |
+          {{- with secret "project-1/database/creds/dev2-setup__stage__project_ro" -}}
+          postgresql://{{ .Data.username }}:{{ .Data.password }}@project-1-pgsql.dev2-setup:5432/project_db
+          {{- end -}}
+    spec:
+      containers:
+        - name: stage-app
+          image: yuriiashutkin/web-app:1.2.1-scratch
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: SECRETS_DIRS
+              value: "/vault/secrets"

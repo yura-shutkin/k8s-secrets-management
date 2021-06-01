@@ -1,0 +1,12 @@
+injector:
+  enabled: true
+  externalVaultAddr: http://vault.vault
+  agentImage:
+    tag: 1.7.1
+  logFormat: json
+  logLevel: trace
+  annotations:
+    vault.security.banzaicloud.io/mutate: "skip"
+
+csi:
+  enabled: false

@@ -1,3 +1,0 @@
-{
-  "policy": "path \"project-1/database/creds/stage_project_ro\" {\n  capabilities = [\"read\"]\n}"
-}

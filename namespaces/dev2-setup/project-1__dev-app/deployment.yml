@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: project-1-dev-app
+  labels:
+    app: project-1-dev-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: project-1-dev-app
+  template:
+    metadata:
+      labels:
+        app: project-1-dev-app
+      annotations:
+        vault.security.banzaicloud.io/mutate: "skip"
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "project-1__dev"
+        vault.hashicorp.com/agent-inject-secret-database-config.txt: "project-1/kv/data/dev/db_creds"
+        vault.hashicorp.com/agent-inject-template-database-config.txt: |
+          {{- with secret "project-1/kv/data/dev/db_creds" -}}
+          postgresql://{{ .Data.data.db_user }}:{{ .Data.data.db_pass }}@project-1-pgsql.dev2-setup:5432/{{ .Data.data.db_name }}
+          {{- end -}}
+    spec:
+      containers:
+        - name: project-1-dev-app
+          image: yuriiashutkin/web-app:1.2.1-ubuntu
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: SECRETS_DIRS
+              value: "/vault/secrets"

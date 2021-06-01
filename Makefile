@@ -50,6 +50,7 @@ prepare: ## Download images that will be used in a future
 	@kubectl --namespace $(PREP_NS) apply -f prepare/namespace.yml
 	@kubectl --namespace $(PREP_NS) apply -f prepare/jobs.yml
 	@$(MAKE) -C namespaces/bank-vaults webhook-update
+	@$(MAKE) -C namespaces/vault vault-chart-update
 
 .PHONY: prepare-delete
 prepare-delete: ## Download images that will be used in a future

@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: stage-app
-          image: yuriiashutkin/web-app:1.1.0-scratch
+          image: yuriiashutkin/web-app:1.2.1-scratch
           ports:
             - containerPort: 8080
               protocol: TCP
@@ -43,7 +43,9 @@ spec:
             - name: FROM_VAULT_ENCRYPTED
               value: "vault:v1:psajosIWWS9fRU1prKO3fQ6qgAmEiVh57rUWMB7el1+MqBMl5mpacAW61j6wyw=="
             - name: FROM_VAULT_DB_URL
-              value: "postgres://${vault:project-1/database/creds/stage_project_ro#username}:${vault:project-1/database/creds/stage_project_ro#password}@project-1-pgsql.dev-setup:5432/project_db?search_path=public&sslmode=disable"
+              value: "postgres://${vault:project-1/database/creds/dev-setup__stage__project_ro#username}:${vault:project-1/database/creds/dev-setup__stage__project_ro#username#password}@project-1-pgsql.dev-setup:5432/project_db?search_path=public&sslmode=disable"
+            - name: SECRETS_DIRS
+              value: "/etc/db-creds"
           volumeMounts:
             - name: db-creds
               mountPath: "/etc/db-creds"

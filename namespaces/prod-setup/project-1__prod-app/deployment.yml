@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
         - name: project-1-prod-app
-          image: yuriiashutkin/web-app:1.1.0-scratch
+          image: yuriiashutkin/web-app:1.2.1-scratch
           ports:
             - containerPort: 8080
               protocol: TCP
