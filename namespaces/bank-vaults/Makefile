@@ -17,12 +17,12 @@ namespace-recreate: ## Recreate namespace $(NAMESPACE)
 webhook-update: ## Get helm chart
 	@helm repo add banzaicloud-stable https://kubernetes-charts.banzaicloud.com
 	@helm repo update
-	@helm pull banzaicloud-stable/vault-secrets-webhook --version=1.13.0
+	@helm pull banzaicloud-stable/vault-secrets-webhook --version=1.14.2
 
 .PHONY: webhook-install
 namespace=bank-vaults
 webhook-install: ## Install webhook
-	@helm upgrade --namespace $(namespace) --install -f values.yml default vault-secrets-webhook-1.13.0.tgz
+	@helm upgrade --namespace $(namespace) --install -f values.yml default vault-secrets-webhook-1.14.2.tgz
 
 .PHONY: webhook-uninstall
 namespace=bank-vaults

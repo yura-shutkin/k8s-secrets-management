@@ -34,7 +34,7 @@ vault-setup: ## Create necessary resources in vault
 	# Enable kubernetes auth backend
 	-@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/k8s-auth-backend.json "$(VAULT_URL)/v1/sys/auth/kubernetes"
 	# Configure k8s auth backend
-	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d "{\"kubernetes_host\": \"https://10.96.0.1\", \"kubernetes_ca_cert\":\"$(CA_CRT)\", \"disable_local_ca_jwt\": \"true\", \"token_reviewer_jwt\":\"$(JWT)\"}" "$(VAULT_URL)/v1/auth/kubernetes/config"
+	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d "{\"kubernetes_host\": \"https://kubernetes.default.svc.cluster.local\", \"kubernetes_ca_cert\":\"$(CA_CRT)\", \"disable_local_ca_jwt\": \"true\", \"token_reviewer_jwt\":\"$(JWT)\", \"issuer\": \"https://kubernetes.default.svc.cluster.local\", \"disable_iss_validation\": true}" "$(VAULT_URL)/v1/auth/kubernetes/config"
 	# Create or update k8s auth roles
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__dev.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__dev"
 	@curl -X POST -H "X-Vault-Token: $(VAULT_TOKEN)" -d @payloads/project-1__k8s-role__stage.json "$(VAULT_URL)/v1/auth/kubernetes/role/project-1__stage"
@@ -113,12 +113,16 @@ sa-cert-get: ## Get CA cert of default-vault-secrets-webhook SA
 vault-chart-update: ## Get helm chart
 	@helm repo add hashicorp https://helm.releases.hashicorp.com
 	@helm repo update
-	@helm pull hashicorp/vault --version=0.12.0
+	@helm pull hashicorp/vault --version=0.17.1
 
 .PHONY: vault-injector-install
 vault-injector-install: ## Install vault injector
-	@helm upgrade --namespace $(NAMESPACE) --install -f injector.yml default vault-0.12.0.tgz
+	@helm upgrade --namespace $(NAMESPACE) --install -f injector.yml default vault-0.17.1.tgz
 
 .PHONY: vault-injector-uninstall
 vault-injector-uninstall: ## Uninstall vault injector
 	@helm uninstall --namespace $(NAMESPACE) default
+
+.PHONY: vault-logs-follow
+vault-logs-follow: ## Show vault server logs
+	@kubectl --namespace vault logs --follow --all-containers --selector app=vault

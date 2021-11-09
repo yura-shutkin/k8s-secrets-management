@@ -37,8 +37,6 @@ This repo is set of examples and prototypes for secrets management
 
 - [errors and how to fix them](docs/errors.md)
 - [TODO](TODO.md)
-- [Mutating webhook configuration examples](https://banzaicloud.com/docs/bank-vaults/mutating-webhook/configuration/)
-- [Mutating webhook annotations](https://banzaicloud.com/docs/bank-vaults/mutating-webhook/annotations/)
 - <details>
   <summary>Demo project schemes</summary>
   
@@ -49,11 +47,29 @@ This repo is set of examples and prototypes for secrets management
     </details>
 
   - <details>
+    <summary>dev-setup</summary>
+  
+    ![dev2-setup-namespace](docs/schemes/dev2-setup.png)
+    </details>
+  
+  - <details>
     <summary>prod-setup</summary>
   
     ![prod-setup-namespace](docs/schemes/prod-setup.png)
     </details>
   </details>
+
+## Useful links
+
+- [Mutating webhook configuration examples](https://banzaicloud.com/docs/bank-vaults/mutating-webhook/configuration/)
+- [Mutating webhook annotations](https://banzaicloud.com/docs/bank-vaults/mutating-webhook/annotations/)
+- [Service account issuer validation from BanzaiCloud (k8s 1.21+)](https://banzaicloud.com/blog/kubernetes-oidc/)
+- [Service account issuer validation official documentation (k8s 1.21+)](https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/#service-account-issuer-discovery)
+- [chart values](https://github.com/hashicorp/vault-helm/blob/master/values.yaml)
+- [sidecar injector](https://learn.hashicorp.com/tutorials/vault/kubernetes-sidecar?in=vault/kubernetes)
+- [csi provider](https://learn.hashicorp.com/tutorials/vault/kubernetes-secret-store-driver?in=vault/kubernetes)
+- [vault agent](https://learn.hashicorp.com/tutorials/vault/agent-kubernetes?in=vault/kubernetes)
+- [vault injector examples](https://www.vaultproject.io/docs/platform/k8s/injector/examples)
 
 ## How to start
 
@@ -77,8 +93,8 @@ This repo is set of examples and prototypes for secrets management
   </details>
 
 - Run `make dashboard-deploy`
-- Run `make admin-sa-token-get`
 - Run `make proxy`
+- Run `make admin-sa-token-get`
 - Open [dashboard](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login)
 ---
-- Next step: [Deploy bank vault Vault Secrets Webhook](namespaces/bank-vaults/)
+- Next step: [Deploy bank vault Vault Secrets Webhook](namespaces/bank-vaults)

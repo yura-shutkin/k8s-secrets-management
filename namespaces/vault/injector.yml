@@ -2,7 +2,7 @@ injector:
   enabled: true
   externalVaultAddr: http://vault.vault
   agentImage:
-    tag: 1.7.1
+    tag: 1.7.6
   logFormat: json
   logLevel: trace
   annotations:

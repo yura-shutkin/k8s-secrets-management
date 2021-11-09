@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: vault
-          image: vault:1.7.1
+          image: vault:1.7.6
           ports:
             - containerPort: 8200
               protocol: TCP

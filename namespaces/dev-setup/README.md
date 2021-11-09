@@ -3,14 +3,13 @@
 ## How to set
 - Run `cd ../dev-setup`
 - Run `make namespace-create`
-- Run `make secret-create`
 - To check authentication run `make project-1-dev-app-check-login`
 - To check authentication run `make project-1-stage-app-check-login`
 - To check authentication run `make project-1-pgsql-check-login`
 - To check authentication run `make project-2-dev-app-check-login`
 - Encrypt string for dev env [project-1/transit/dev](http://localhost:8200/ui/vault/secrets/project-1%2Ftransit/actions/dev?action=encrypt)
 - Put encrypted string into [project-1__dev-app/deployment.yml]()
-- Encrypt string for dev env [project-1/transit/stage](http://localhost:8200/ui/vault/secrets/project-1%2Ftransit/actions/stage?action=encrypt)
+- Encrypt string for stage env [project-1/transit/stage](http://localhost:8200/ui/vault/secrets/project-1%2Ftransit/actions/stage?action=encrypt)
 - Put encrypted string into [project-1__dev-stage/deployment.yml]()
 - Run `make project-1-pgsql-deploy`
 - Run `make project-1-pgsql-vault-setup`
