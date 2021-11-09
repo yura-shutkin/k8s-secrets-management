@@ -34,16 +34,9 @@ spec:
           ports:
             - containerPort: 5432
               protocol: TCP
-          # https://www.vaultproject.io/docs/platform/k8s/injector/examples#environment-variable-example not working
+          # https://www.vaultproject.io/docs/platform/k8s/injector/examples#environment-variable-example
           args:
             ['sh', '-c', 'source /vault/secrets/database-root-vars && docker-entrypoint.sh postgres']
-          env:
-            - name: POSTGRES_DB
-              value: project_db
-            - name: POSTGRES_USER
-              value: project
-            - name: POSTGRES_PASSWORD
-              value: s3cr3T
           volumeMounts:
             - name: project-db-init
               mountPath: /docker-entrypoint-initdb.d
