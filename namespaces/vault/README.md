@@ -10,11 +10,20 @@
 
 ---
 
-- Now Vault set, go into [dev-setup](../dev-setup/README.md)
+- Now Vault is set, go into [dev-setup](../dev-setup)
+
+---
 
 ## Hashicorp Vault injector
 
+### How to deploy
+
+- Run `cd ../vault`
 - Run `make vault-injector-install`
+
+---
+
+- Now Vault set, go into [dev2-setup](../dev2-setup)
 
 ## Useful locations
 

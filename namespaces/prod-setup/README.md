@@ -9,6 +9,10 @@
 - Run `make project-1-prod-app-port-forward`
 - Visit http://localhost:12080
 
+---
+
+- Next step: [vault namespace](../vault)
+
 ### Documentation
 <!-- - https://learn.hashicorp.com/tutorials/vault/agent-kubernetes -->
 

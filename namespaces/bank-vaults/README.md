@@ -12,4 +12,4 @@
 
 ---
 
-- Next step: setup [Hashicorp Vault](../vault/)
+- Next step: setup [Hashicorp Vault](../vault)

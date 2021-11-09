@@ -43,7 +43,7 @@ spec:
               value: "vault:project-1/kv/data/dev/token#value#2"
             # TODO: this value should be actual for every installation
             - name: FROM_VAULT_ENCRYPTED
-              value: "vault:v1:fHZMQXji9AsPnLXLhImlexj1rP7anD/1wb9qtag2v8RE/VQWDJg0/oLwxoY="
+              value: "vault:v1:ZAfdJwJzH7ty8C/6cRKMgpvpp10xBeezN2ExgUmGaJtYfC1+JJ+DP2E="
             - name: FROM_VAULT_DB_USER
               value: "vault:project-1/database/creds/dev-setup__dev__project_ro#username"
             - name: FROM_VAULT_DB_PASS

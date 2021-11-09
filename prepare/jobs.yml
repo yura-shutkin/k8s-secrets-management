@@ -23,7 +23,7 @@ spec:
     spec:
       containers:
         - name: dashboard
-          image: kubernetesui/dashboard:v2.2.0
+          image: kubernetesui/dashboard:v2.3.1
           imagePullPolicy: IfNotPresent
       restartPolicy: Never
   backoffLimit: 1
@@ -38,7 +38,7 @@ spec:
     spec:
       containers:
         - name: vault-secrets-webhook
-          image: ghcr.io/banzaicloud/vault-secrets-webhook:1.13.0
+          image: ghcr.io/banzaicloud/vault-secrets-webhook:1.14.1
           imagePullPolicy: IfNotPresent
       restartPolicy: Never
   backoffLimit: 1
@@ -53,7 +53,7 @@ spec:
     spec:
       containers:
         - name: vault
-          image: vault:1.7.1
+          image: vault:1.7.6
           imagePullPolicy: IfNotPresent
       restartPolicy: Never
   backoffLimit: 1
@@ -113,7 +113,7 @@ spec:
     spec:
       containers:
         - name: vault-env
-          image: ghcr.io/banzaicloud/vault-env:1.13.0
+          image: ghcr.io/banzaicloud/vault-env:1.14.2
           imagePullPolicy: IfNotPresent
       restartPolicy: Never
   backoffLimit: 1

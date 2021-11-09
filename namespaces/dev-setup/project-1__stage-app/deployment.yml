@@ -41,7 +41,7 @@ spec:
               value: "vault:project-1/kv/data/stage/token#value#2"
             # TODO: this value should be actual for every installation
             - name: FROM_VAULT_ENCRYPTED
-              value: "vault:v1:psajosIWWS9fRU1prKO3fQ6qgAmEiVh57rUWMB7el1+MqBMl5mpacAW61j6wyw=="
+              value: "vault:v1:sYUXRWmYfDFYQ3mCti7BcP6R7rR47eUsraE6Q3eGMyLjlNca"
             - name: FROM_VAULT_DB_URL
               value: "postgres://${vault:project-1/database/creds/dev-setup__stage__project_ro#username}:${vault:project-1/database/creds/dev-setup__stage__project_ro#username#password}@project-1-pgsql.dev-setup:5432/project_db?search_path=public&sslmode=disable"
             - name: SECRETS_DIRS

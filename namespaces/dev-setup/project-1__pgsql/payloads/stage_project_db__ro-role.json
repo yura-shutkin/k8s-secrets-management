@@ -1,6 +1,6 @@
 {
   "creation_statements": "CREATE ROLE \"{{name}}\" WITH LOGIN PASSWORD '{{password}}' VALID UNTIL '{{expiration}}'; GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";",
   "db_name": "dev-setup__project_db",
-  "default_ttl": "30s",
+  "default_ttl": "60s",
   "max_ttl": "60s"
 }
