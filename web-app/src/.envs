@@ -1,0 +1,2 @@
+export HOSTS='http://google.com;http://localhost:8080'
+export SECRETS_DIRS=test_data

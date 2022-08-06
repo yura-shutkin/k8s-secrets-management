@@ -2,8 +2,7 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
-	"fmt"
+	log "github.com/sirupsen/logrus"
 	"html/template"
 	"io/ioutil"
 	"net/http"
@@ -23,7 +22,9 @@ func generateData() map[string]map[string]string {
 	if envDirs != "" {
 		var dirs []string
 		dirs = strings.Split(envDirs, ",")
-		fmt.Println(dirs)
+		log.WithFields(log.Fields{
+			"dirs": dirs,
+		}).Info()
 
 		var files []string
 
@@ -33,15 +34,14 @@ func generateData() map[string]map[string]string {
 				return nil
 			})
 			if err != nil {
-				fmt.Printf("An error occured: %s\n", err)
+				log.WithFields(log.Fields{
+					"Error": err,
+				}).Error()
 			}
 		}
 
 		for idx := range files {
-			pair, err := readVarFromFile(files[idx])
-			if err != nil {
-				fmt.Printf("An error occured: %s\n", err)
-			}
+			pair := readVarFromFile(files[idx])
 
 			if pair != nil {
 				_, ok := vars["file"]
@@ -64,46 +64,44 @@ func generateData() map[string]map[string]string {
 	return vars
 }
 
-func readVarFromFile(filename string) (map[string]string, error) {
+func readVarFromFile(filename string) map[string]string {
 	info, err := os.Stat(filename)
 	if err != nil {
-		return nil, errors.New("something went wrong with access to file")
+		log.Errorf("Something went wrong with access to file %v", filename)
+		return nil
 	}
 	if info.IsDir() {
-		return nil, errors.New("it should be file, not a directory")
+		return nil
 	}
 
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
-		return nil, errors.New("can't read from file")
+		log.Errorf("Can't read from file %v", filename)
+		return nil
 	}
 
 	pair := make(map[string]string)
 	pair["key"] = strings.ToUpper(filepath.Base(filename))
 	pair["val"] = string(data)
-	return pair, nil
+	return pair
 }
 
-func renderWeb(w http.ResponseWriter, r *http.Request) {
-	// TODO: should return json
+func renderHtml(w http.ResponseWriter, r *http.Request) {
 	vars := generateData()
 
 	renderedPage, _ := template.ParseFiles("envs.gohtml")
 	err := renderedPage.Execute(w, vars)
 	if err != nil {
-		fmt.Printf("An error occured: %s\n", err)
+		log.WithFields(log.Fields{
+			"Error": err,
+		}).Error()
 	}
-	// TODO: use a normal logger
-	logMessage := map[string]string{
+
+	log.WithFields(log.Fields{
 		"Method":      r.Method,
 		"URL":         r.URL.String(),
 		"Remote-Addr": r.RemoteAddr,
-	}
-	logMsgJSON, marshallErr := json.Marshal(logMessage)
-	if marshallErr != nil {
-		fmt.Printf("An error occured: %s\n", marshallErr)
-	}
-	fmt.Println(string(logMsgJSON))
+	}).Info()
 }
 
 func ping(w http.ResponseWriter, r *http.Request) {
@@ -113,21 +111,18 @@ func ping(w http.ResponseWriter, r *http.Request) {
 
 	jsonData, marshallErr := json.Marshal(data)
 	if marshallErr != nil {
-		fmt.Printf("An error occured: %s\n", marshallErr)
+		log.WithFields(log.Fields{
+			"Error": marshallErr,
+		}).Error()
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonData)
-	// TODO: use a normal logger
-	logMessage := map[string]string{
+
+	log.WithFields(log.Fields{
 		"Method":      r.Method,
 		"URL":         r.URL.String(),
 		"Remote-Addr": r.RemoteAddr,
-	}
-	logMsgJSON, marshallErr := json.Marshal(logMessage)
-	if marshallErr != nil {
-		fmt.Printf("An error occured: %s\n", marshallErr)
-	}
-	fmt.Println(string(logMsgJSON))
+	}).Info()
 }
 
 func jsonEnvs(w http.ResponseWriter, r *http.Request) {
@@ -135,21 +130,18 @@ func jsonEnvs(w http.ResponseWriter, r *http.Request) {
 
 	jsonData, marshallErr := json.Marshal(data)
 	if marshallErr != nil {
-		fmt.Printf("An error occured: %s\n", marshallErr)
+		log.WithFields(log.Fields{
+			"Error": marshallErr,
+		}).Error()
 	}
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonData)
-	// TODO: use a normal logger
-	logMessage := map[string]string{
+
+	log.WithFields(log.Fields{
 		"Method":      r.Method,
 		"URL":         r.URL.String(),
 		"Remote-Addr": r.RemoteAddr,
-	}
-	logMsgJSON, marshallErr := json.Marshal(logMessage)
-	if marshallErr != nil {
-		fmt.Printf("An error occured: %s\n", marshallErr)
-	}
-	fmt.Println(string(logMsgJSON))
+	}).Info()
 }
 
 func checkServices(w http.ResponseWriter, r *http.Request) {
@@ -175,54 +167,51 @@ func checkServices(w http.ResponseWriter, r *http.Request) {
 			code := "0"
 			resp, respErr := http.Get(hostAddr)
 			if respErr != nil {
-				fmt.Printf("An error occured: %s\n", respErr)
+				log.WithFields(log.Fields{
+					"Error": respErr,
+				}).Error()
 			} else {
 				code = strconv.Itoa(resp.StatusCode)
 			}
 
 			response.Hosts = append(response.Hosts, host{hostAddr, code})
 
-			// TODO: use a normal logger
-			logMessage := map[string]string{
+			log.WithFields(log.Fields{
 				"Host": hostAddr,
 				"Code": code,
-			}
-			logMsgJSON, marshallErr := json.Marshal(logMessage)
-			if marshallErr != nil {
-				fmt.Printf("An error occured: %s\n", marshallErr)
-			}
-			fmt.Println(string(logMsgJSON))
+			}).Info()
 		}
 	}
 
 	jsonData, dataMarshallErr := json.Marshal(response)
 	if dataMarshallErr != nil {
-		fmt.Printf("An error occured: %s\n", dataMarshallErr)
+		log.WithFields(log.Fields{
+			"Error": dataMarshallErr,
+		}).Error()
 	}
 
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonData)
-	// TODO: use a normal logger
-	logMessage := map[string]string{
+
+	log.WithFields(log.Fields{
 		"Method":      r.Method,
 		"URL":         r.URL.String(),
 		"Remote-Addr": r.RemoteAddr,
-	}
-	logMsgJSON, marshallErr := json.Marshal(logMessage)
-	if marshallErr != nil {
-		fmt.Printf("An error occured: %s\n", marshallErr)
-	}
-	fmt.Println(string(logMsgJSON))
+	}).Info()
 }
 
 func main() {
+	log.SetFormatter(&log.JSONFormatter{})
+	log.SetOutput(os.Stdout)
+	log.SetLevel(log.InfoLevel)
+
 	listenAddr := os.Getenv("LISTEN_ADDR")
 	if listenAddr == "" {
-		listenAddr = "0.0.0.0:8080"
+		listenAddr = "localhost:8080"
 	}
 
-	fmt.Printf("Server is starting on: %v\n", listenAddr)
-	http.HandleFunc("/", renderWeb)
+	log.Infof("Server is starting on: %v", listenAddr)
+	http.HandleFunc("/", renderHtml)
 	http.HandleFunc("/json", jsonEnvs)
 	http.HandleFunc("/ping", ping)
 	http.HandleFunc("/net-check", checkServices)

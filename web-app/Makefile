@@ -6,11 +6,11 @@ platform="linux/amd64"
 
 .PHONY: build
 build: ## Build app image
-	@docker build --rm -t "$(registry_addr)/web-app:$(version)-$(arch)" --build-arg=$(go_ver) -f $(arch)/Dockerfile .
+	@docker build --rm -t "$(registry_addr)/web-app:$(version)-$(arch)" --build-arg=$(go_ver) -f docker/Dockerfile-$(arch) .
 
 .PHONY: buildx
 buildx: ## Build app image
-	@docker buildx build --platform $(platform) --rm -t "$(registry_addr)/web-app:$(version)-$(arch)" --build-arg=$(go_ver) -f $(arch)/Dockerfile .
+	@docker buildx build --platform $(platform) --rm -t "$(registry_addr)/web-app:$(version)-$(arch)" --build-arg=$(go_ver) -f docker/Dockerfile-$(arch) .
 
 .PHONY: push
 push: ## Push image into registry
